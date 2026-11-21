@@ -28,7 +28,8 @@ class SubmitColors {
 }
 
 class SubmitComplaintScreen extends StatefulWidget {
-  const SubmitComplaintScreen({super.key});
+  final int? initialCategoryId;
+  const SubmitComplaintScreen({super.key, this.initialCategoryId});
 
   @override
   State<SubmitComplaintScreen> createState() => _SubmitComplaintScreenState();
@@ -69,7 +70,7 @@ class _SubmitComplaintScreenState extends State<SubmitComplaintScreen> {
   bool _isCapturingLocation = false;
 
   // Grievance Controllers
-  int _selectedCategoryId = 1; // 1: Drinking Water
+  int _selectedCategoryId = 4; // Default: Drinking Water Supply (CAT-WAT in DB, id: 4)
   String _selectedPriority = 'medium';
   final _subjectController = TextEditingController();
   final _descController = TextEditingController();
@@ -96,6 +97,9 @@ class _SubmitComplaintScreenState extends State<SubmitComplaintScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialCategoryId != null) {
+      _selectedCategoryId = widget.initialCategoryId!;
+    }
     _districts = List<Map<String, dynamic>>.from(TnLocationsData.districts);
     _selectedDistrictId = 30; // Default: Tirunelveli
     _divisions = TnLocationsData.divisions.where((d) => d['district_id'] == _selectedDistrictId).toList();
@@ -108,6 +112,7 @@ class _SubmitComplaintScreenState extends State<SubmitComplaintScreen> {
     }
 
     _loadActiveDistricts();
+    _loadCategories();
 
     // Attempt to prompt/capture live GPS location for complaint
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -620,19 +625,124 @@ class _SubmitComplaintScreenState extends State<SubmitComplaintScreen> {
     );
   }
 
-  // 10 Categories matching Laravel Database
-  final List<Map<String, dynamic>> _categories = const [
-    {'id': 1, 'name_ta': 'குடிநீர் வழங்கல்', 'name_en': 'Drinking Water Supply'},
-    {'id': 2, 'name_ta': 'சாக்கடை மற்றும் சுகாதாரம்', 'name_en': 'Drainage and Sanitation'},
-    {'id': 3, 'name_ta': 'சாலை மற்றும் தெரு பராமரிப்பு', 'name_en': 'Roads and Street Maintenance'},
-    {'id': 4, 'name_ta': 'தெருவிளக்கு பராமரிப்பு', 'name_en': 'Street Lighting'},
-    {'id': 5, 'name_ta': 'மின்சாரம் மற்றும் மின்கட்டமைப்பு', 'name_en': 'Electricity & Power Supply'},
-    {'id': 6, 'name_ta': 'குப்பை மேலாண்மை & அகற்றுதல்', 'name_en': 'Solid Waste & Garbage Clearance'},
-    {'id': 7, 'name_ta': 'பொது சுகாதாரம் & கொசு ஒழிப்பு', 'name_en': 'Public Health & Mosquito Control'},
-    {'id': 8, 'name_ta': 'வருவாய் மற்றும் நில நிர்வாகம்', 'name_en': 'Revenue & Land Matters'},
-    {'id': 9, 'name_ta': 'ரேஷன் கடை மற்றும் உணவுப்பொருள்', 'name_en': 'Fair Price Shops / Ration (PDS)'},
-    {'id': 10, 'name_ta': 'ஆக்கிரமிப்பு அகற்றுதல்', 'name_en': 'Encroachment Removal'},
+  // 12 Comprehensive Grievance Categories matching Laravel Database Seeder
+  List<Map<String, dynamic>> _categories = [
+    {
+      'id': 4,
+      'code': 'CAT-WAT',
+      'name_ta': 'குடிநீர் விநியோகம்',
+      'name_en': 'Drinking Water Supply',
+      'department_name_ta': 'தமிழ்நாடு குடிநீர் வடிகால் வாரியம் மற்றும் நகராட்சி குடிநீர் பிரிவு',
+      'department_name_en': 'TWAD Board & Municipal Water Works',
+    },
+    {
+      'id': 5,
+      'code': 'CAT-SAN',
+      'name_ta': 'சாக்கடை மற்றும் சுகாதாரம்',
+      'name_en': 'Drainage and Sanitation',
+      'department_name_ta': 'பொது சுகாதாரம் மற்றும் உள்ளாட்சி சுகாதார பிரிவு',
+      'department_name_en': 'Public Health & Local Body Sanitation',
+    },
+    {
+      'id': 6,
+      'code': 'CAT-ROD',
+      'name_ta': 'சாலை மற்றும் தெரு பராமரிப்பு',
+      'name_en': 'Roads and Street Maintenance',
+      'department_name_ta': 'நெடுஞ்சாலை மற்றும் ஊரக சாலைகள் துறை',
+      'department_name_en': 'Highways & Rural Roads Department',
+    },
+    {
+      'id': 7,
+      'code': 'CAT-LGT',
+      'name_ta': 'தெருவிளக்கு பராமரிப்பு',
+      'name_en': 'Street Lighting',
+      'department_name_ta': 'உள்ளாட்சி மின்சாரப் பிரிவு',
+      'department_name_en': 'Local Body Electrical Wing',
+    },
+    {
+      'id': 8,
+      'code': 'CAT-ELE',
+      'name_ta': 'மின்சாரம் மற்றும் மின்கட்டமைப்பு',
+      'name_en': 'Electricity & Power Supply',
+      'department_name_ta': 'தமிழ்நாடு மின் உற்பத்தி மற்றும் பகிர்மானக் கழகம் (டான்ஜெட்கோ)',
+      'department_name_en': 'TANGEDCO (Electricity Board)',
+    },
+    {
+      'id': 9,
+      'code': 'CAT-WST',
+      'name_ta': 'குப்பை மேலாண்மை மற்றும் அகற்றுதல்',
+      'name_en': 'Solid Waste & Garbage Clearance',
+      'department_name_ta': 'திடக்கழிவு மேலாண்மைப் பிரிவு',
+      'department_name_en': 'Solid Waste Management Cell',
+    },
+    {
+      'id': 10,
+      'code': 'CAT-HLT',
+      'name_ta': 'பொது சுகாதாரம் மற்றும் கொசு ஒழிப்பு',
+      'name_en': 'Public Health & Mosquito Control',
+      'department_name_ta': 'சுகாதார பணிகள் துணை இயக்குனர் அலுவலகம்',
+      'department_name_en': 'Deputy Director of Health Services',
+    },
+    {
+      'id': 1,
+      'code': 'CAT-REV',
+      'name_ta': 'வருவாய்த் துறை (பட்டா, நிலம் & சான்றிதழ்கள்)',
+      'name_en': 'Revenue Department (Land, Patta & Certificates)',
+      'department_name_ta': 'வருவாய்த் துறை',
+      'department_name_en': 'Revenue Department',
+    },
+    {
+      'id': 2,
+      'code': 'CAT-SCH',
+      'name_ta': 'அரசுத் திட்டங்கள் & நலத்திட்ட உதவிகள்',
+      'name_en': 'Government Schemes & Welfare Assistance',
+      'department_name_ta': 'சமூக நலத்துறை & அரசு திட்டங்கள் பிரிவு',
+      'department_name_en': 'Social Welfare & Government Schemes Department',
+    },
+    {
+      'id': 11,
+      'code': 'CAT-PDS',
+      'name_ta': 'ரேஷன் கடை மற்றும் உணவுப்பொருள்',
+      'name_en': 'Fair Price Shops / Ration (PDS)',
+      'department_name_ta': 'உணவுப்பொருள் வழங்கல் மற்றும் நுகர்வோர் பாதுகாப்புத் துறை',
+      'department_name_en': 'Civil Supplies and Consumer Protection',
+    },
+    {
+      'id': 12,
+      'code': 'CAT-ENC',
+      'name_ta': 'ஆக்கிரமிப்பு அகற்றுதல்',
+      'name_en': 'Encroachment Removal',
+      'department_name_ta': 'வருவாய்த்துறை மற்றும் உள்ளாட்சி நிர்வாகம்',
+      'department_name_en': 'Revenue & Local Administration',
+    },
+    {
+      'id': 3,
+      'code': 'CAT-OTH',
+      'name_ta': 'இதர புகார்கள் / பிற கோரிக்கைகள்',
+      'name_en': 'Others / Miscellaneous',
+      'department_name_ta': 'பொது குறைதீர்ப்பு மற்றும் மக்கள் தொடர்பு பிரிவு',
+      'department_name_en': 'Public Grievance Redressal Cell',
+    },
   ];
+
+  Future<void> _loadCategories() async {
+    try {
+      final res = await _dio.get(ApiConfig.metaCategoriesUrl);
+      if (res.statusCode == 200 && res.data != null && res.data['success'] == true) {
+        final list = (res.data['data'] as List).cast<Map<String, dynamic>>();
+        if (list.isNotEmpty && mounted) {
+          setState(() {
+            _categories = list;
+            if (!_categories.any((c) => c['id'] == _selectedCategoryId)) {
+              _selectedCategoryId = _categories.first['id'] as int;
+            }
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading categories from API: $e');
+    }
+  }
 
   Future<void> _pickPhoto() async {
     showModalBottomSheet(
@@ -1709,16 +1819,18 @@ class _SubmitComplaintScreenState extends State<SubmitComplaintScreen> {
               _fieldLabel(isTa ? 'கோரிக்கை வகை (Category)' : 'Grievance Category', isRequired: true),
               DropdownButtonFormField<int>(
                 isExpanded: true,
-                initialValue: _selectedCategoryId,
+                initialValue: _categories.any((c) => c['id'] == _selectedCategoryId)
+                    ? _selectedCategoryId
+                    : (_categories.isNotEmpty ? _categories.first['id'] as int : null),
                 decoration: _inputDeco(
                   '',
                   prefixIcon: const Icon(Icons.category_rounded, color: Color(0xFF7C3AED), size: 20),
                 ),
                 items: _categories.map((c) {
                   return DropdownMenuItem<int>(
-                    value: c['id'],
+                    value: c['id'] as int,
                     child: Text(
-                      isTa ? c['name_ta'] : c['name_en'],
+                      isTa ? (c['name_ta'] ?? c['name_en'] ?? '') : (c['name_en'] ?? c['name_ta'] ?? ''),
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                     ),

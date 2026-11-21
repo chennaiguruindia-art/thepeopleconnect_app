@@ -105,16 +105,6 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
     super.dispose();
   }
 
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.navy,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<String>(
@@ -683,8 +673,121 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
 
   // -----------------------------------------------------------
   // C. GRIEVANCE CATEGORIES ("எந்தப் பிரச்சினையைப் பதிவு செய்ய விரும்புகிறீர்கள்?")
+  // Complete 12 Categories matching Laravel Database Seeder
   // -----------------------------------------------------------
+  static const List<Map<String, dynamic>> _homeCategories = [
+    {
+      'id': 4,
+      'code': 'CAT-WAT',
+      'name_ta': 'குடிநீர் விநியோகம்',
+      'name_en': 'Drinking Water',
+      'icon': Icons.water_drop_rounded,
+      'bgColor': Color(0xFFEFF6FF),
+      'iconColor': Color(0xFF2563EB),
+    },
+    {
+      'id': 5,
+      'code': 'CAT-SAN',
+      'name_ta': 'சாக்கடை / சுகாதாரம்',
+      'name_en': 'Drainage & Sanitation',
+      'icon': Icons.cleaning_services_rounded,
+      'bgColor': Color(0xFFF0FDF4),
+      'iconColor': Color(0xFF16A34A),
+    },
+    {
+      'id': 6,
+      'code': 'CAT-ROD',
+      'name_ta': 'சாலை பராமரிப்பு',
+      'name_en': 'Roads & Streets',
+      'icon': Icons.alt_route_rounded,
+      'bgColor': Color(0xFFF1F5F9),
+      'iconColor': Color(0xFF334155),
+    },
+    {
+      'id': 7,
+      'code': 'CAT-LGT',
+      'name_ta': 'தெருவிளக்கு',
+      'name_en': 'Street Lighting',
+      'icon': Icons.lightbulb_rounded,
+      'bgColor': Color(0xFFFFFBEB),
+      'iconColor': Color(0xFFD97706),
+    },
+    {
+      'id': 8,
+      'code': 'CAT-ELE',
+      'name_ta': 'மின்சார வசதி',
+      'name_en': 'Electricity Supply',
+      'icon': Icons.bolt_rounded,
+      'bgColor': Color(0xFFFEFCE8),
+      'iconColor': Color(0xFFCA8A04),
+    },
+    {
+      'id': 9,
+      'code': 'CAT-WST',
+      'name_ta': 'குப்பை மேலாண்மை',
+      'name_en': 'Garbage Clearance',
+      'icon': Icons.delete_outline_rounded,
+      'bgColor': Color(0xFFECFDF5),
+      'iconColor': Color(0xFF059669),
+    },
+    {
+      'id': 10,
+      'code': 'CAT-HLT',
+      'name_ta': 'பொது சுகாதாரம்',
+      'name_en': 'Public Health',
+      'icon': Icons.local_hospital_rounded,
+      'bgColor': Color(0xFFFFF1F2),
+      'iconColor': Color(0xFFE11D48),
+    },
+    {
+      'id': 1,
+      'code': 'CAT-REV',
+      'name_ta': 'வருவாய்த் துறை (பட்டா)',
+      'name_en': 'Revenue & Patta',
+      'icon': Icons.description_rounded,
+      'bgColor': Color(0xFFFFF7ED),
+      'iconColor': Color(0xFFEA580C),
+    },
+    {
+      'id': 2,
+      'code': 'CAT-SCH',
+      'name_ta': 'அரசு நலத்திட்டங்கள்',
+      'name_en': 'Govt Schemes',
+      'icon': Icons.military_tech_rounded,
+      'bgColor': Color(0xFFFAF5FF),
+      'iconColor': Color(0xFF8B5CF6),
+    },
+    {
+      'id': 11,
+      'code': 'CAT-PDS',
+      'name_ta': 'ரேஷன் கடை (PDS)',
+      'name_en': 'Fair Price Shops',
+      'icon': Icons.shopping_basket_rounded,
+      'bgColor': Color(0xFFEEF2FF),
+      'iconColor': Color(0xFF4F46E5),
+    },
+    {
+      'id': 12,
+      'code': 'CAT-ENC',
+      'name_ta': 'ஆக்கிரமிப்பு அகற்றுதல்',
+      'name_en': 'Encroachments',
+      'icon': Icons.block_rounded,
+      'bgColor': Color(0xFFF0FDFA),
+      'iconColor': Color(0xFF0D9488),
+    },
+    {
+      'id': 3,
+      'code': 'CAT-OTH',
+      'name_ta': 'இதர கோரிக்கைகள்',
+      'name_en': 'Others / Misc',
+      'icon': Icons.more_horiz_rounded,
+      'bgColor': Color(0xFFF8FAFC),
+      'iconColor': Color(0xFF64748B),
+    },
+  ];
+
   Widget _buildCategoriesSection() {
+    final isTa = AppTranslations.isTamil;
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 26),
@@ -712,36 +815,41 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 0.95,
-            children: [
-              _categoryCard(AppTranslations.tr('cat_road'), Icons.alt_route, const Color(0xFFF1F5F9), const Color(0xFF334155)),
-              _categoryCard(AppTranslations.tr('cat_water'), Icons.water_drop_rounded, const Color(0xFFEFF6FF), const Color(0xFF2563EB)),
-              _categoryCard(AppTranslations.tr('cat_electricity'), Icons.bolt_rounded, const Color(0xFFFEFCE8), const Color(0xFFCA8A04)),
-              _categoryCard(AppTranslations.tr('cat_sanitation'), Icons.delete_outline, const Color(0xFFF0FDF4), const Color(0xFF16A34A)),
-              _categoryCard(AppTranslations.tr('cat_education'), Icons.school_rounded, const Color(0xFFFAF5FF), const Color(0xFF8B5CF6)),
-              _categoryCard(AppTranslations.tr('cat_health'), Icons.local_hospital_rounded, const Color(0xFFFFF1F2), const Color(0xFFE11D48)),
-            ],
+            childAspectRatio: 0.90,
+            children: _homeCategories.map((c) {
+              final title = isTa ? (c['name_ta'] as String) : (c['name_en'] as String);
+              return _categoryCard(
+                c['id'] as int,
+                title,
+                c['icon'] as IconData,
+                c['bgColor'] as Color,
+                c['iconColor'] as Color,
+              );
+            }).toList(),
           ),
         ],
       ),
     );
   }
 
-  Widget _categoryCard(String title, IconData icon, Color bgColor, Color iconColor) {
+  Widget _categoryCard(int categoryId, String title, IconData icon, Color bgColor, Color iconColor) {
     return InkWell(
-      onTap: () => _showMessage(
-        AppTranslations.isTamil
-            ? '$title பிரிவில் புகார் பதிவு'
-            : 'Register grievance for $title',
-      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SubmitComplaintScreen(initialCategoryId: categoryId),
+          ),
+        );
+      },
       borderRadius: BorderRadius.circular(14),
       child: Container(
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: iconColor.withValues(alpha: 0.12)),
+          border: Border.all(color: iconColor.withValues(alpha: 0.15)),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -760,15 +868,16 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
               ),
               child: Icon(icon, color: iconColor, size: 22),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               title,
               textAlign: TextAlign.center,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: FontWeight.bold,
+                height: 1.2,
                 color: AppColors.textDark,
               ),
             ),

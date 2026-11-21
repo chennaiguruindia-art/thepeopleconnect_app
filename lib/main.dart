@@ -418,25 +418,25 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
 
                     // Right: Logo Image (rose mark spot)
                     Container(
-                      width: 72,
-                      height: 90,
-                      margin: const EdgeInsets.only(left: 10, top: 4),
+                      width: 100,
+                      height: 110,
+                      margin: const EdgeInsets.only(left: 10, top: 2),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: AppColors.orange.withValues(alpha: 0.35),
-                          width: 1.5,
+                          color: AppColors.orange.withValues(alpha: 0.4),
+                          width: 2,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.06),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(8),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset(
@@ -450,7 +450,7 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
                                 return const Icon(
                                   Icons.how_to_vote,
                                   color: AppColors.orange,
-                                  size: 36,
+                                  size: 48,
                                 );
                               },
                             );

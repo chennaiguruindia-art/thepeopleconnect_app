@@ -56,8 +56,17 @@ class PeopleConnectApp extends StatelessWidget {
               seedColor: AppColors.orange,
               primary: AppColors.navy,
               secondary: AppColors.orange,
+              primaryContainer: Colors.white,
+              secondaryContainer: Colors.white,
+              tertiaryContainer: Colors.white,
+              surface: Colors.white,
+              onPrimaryContainer: AppColors.navy,
+              onSecondaryContainer: AppColors.orange,
             ),
             fontFamily: 'Roboto',
+            // Disable any stray Material3 color bleed
+            cardColor: Colors.white,
+            dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
           ),
           initialRoute: '/',
           routes: {
@@ -379,26 +388,77 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Main Heading
-                RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                      fontSize: 27,
-                      fontWeight: FontWeight.w900,
-                      height: 1.25,
-                      fontFamily: 'Roboto',
+                // Main Heading + Logo Row
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Left: Main Heading Text
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                            fontSize: 27,
+                            fontWeight: FontWeight.w900,
+                            height: 1.25,
+                            fontFamily: 'Roboto',
+                          ),
+                          children: [
+                            TextSpan(
+                              text: '${AppTranslations.tr('hero_line_1')}\n${AppTranslations.tr('hero_line_2')}\n',
+                              style: const TextStyle(color: AppColors.navy),
+                            ),
+                            TextSpan(
+                              text: AppTranslations.tr('hero_line_3'),
+                              style: const TextStyle(color: AppColors.orange),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    children: [
-                      TextSpan(
-                        text: '${AppTranslations.tr('hero_line_1')}\n${AppTranslations.tr('hero_line_2')}\n',
-                        style: const TextStyle(color: AppColors.navy),
+
+                    // Right: Logo Image (rose mark spot)
+                    Container(
+                      width: 72,
+                      height: 90,
+                      margin: const EdgeInsets.only(left: 10, top: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: AppColors.orange.withValues(alpha: 0.35),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.06),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: AppTranslations.tr('hero_line_3'),
-                        style: const TextStyle(color: AppColors.orange),
+                      padding: const EdgeInsets.all(6),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/images/logo/logo.png',
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.how_to_vote,
+                                  color: AppColors.orange,
+                                  size: 36,
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
 

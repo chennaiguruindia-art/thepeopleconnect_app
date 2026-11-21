@@ -80,7 +80,7 @@ class _SchemesScreenState extends State<SchemesScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _searchController = TextEditingController();
 
-  String _selectedGovFilter = 'all'; // 'all', 'central', 'state'
+  String _selectedGovFilter = 'central'; // 'all', 'central'
   String _selectedCategory = 'all'; // 'all', 'farmers', 'women', 'health', 'education', 'business', 'housing'
   String _searchQuery = '';
 
@@ -174,7 +174,7 @@ class _SchemesScreenState extends State<SchemesScreen> {
                       const Icon(Icons.chevron_right, size: 15, color: SchemeColors.grey),
                       Flexible(
                         child: Text(
-                          isTa ? 'அரசு நலத்திட்டங்கள்' : 'Government Welfare Schemes',
+                          isTa ? 'மத்திய அரசு நலத்திட்டங்கள்' : 'Central Govt Welfare Schemes',
                           style: const TextStyle(
                             fontSize: 12,
                             color: SchemeColors.grey,
@@ -360,8 +360,8 @@ class _SchemesScreenState extends State<SchemesScreen> {
 
           Text(
             isTa
-                ? 'மத்திய & மாநில அரசு நலத்திட்டங்கள்'
-                : 'Central & State Government Schemes',
+                ? 'மத்திய அரசு நலத்திட்டங்கள்'
+                : 'Central Government Schemes',
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
@@ -372,8 +372,8 @@ class _SchemesScreenState extends State<SchemesScreen> {
           const SizedBox(height: 4),
           Text(
             isTa
-                ? 'விவசாயிகள், பெண்கள், மாணவர்கள், தொழிலாளர்கள் மற்றும் ஏழை எளிய மக்களுக்கான அரசு உதவிகள், தகுதிகள் மற்றும் விண்ணப்பிக்கும் முழு விவரங்கள்.'
-                : 'Explore financial aid, housing, pensions, education grants, and healthcare benefits available for all citizens.',
+                ? 'விவசாயிகள், பெண்கள், மாணவர்கள், தொழிலாளர்கள் மற்றும் ஏழை எளிய மக்களுக்கான மத்திய அரசு உதவிகள், தகுதிகள் மற்றும் விண்ணப்பிக்கும் முழு விவரங்கள்.'
+                : 'Explore PM schemes — financial aid, housing, pensions, health insurance, and business loans available for all citizens.',
             style: const TextStyle(
               fontSize: 12,
               color: SchemeColors.grey,
@@ -430,7 +430,6 @@ class _SchemesScreenState extends State<SchemesScreen> {
     );
   }
 
-  // TABS: CENTRAL / STATE / ALL
   Widget _buildGovTypeTabs(bool isTa) {
     return Container(
       padding: const EdgeInsets.all(4),
@@ -450,20 +449,11 @@ class _SchemesScreenState extends State<SchemesScreen> {
           ),
           Expanded(
             child: _govTabItem(
-              label: isTa ? 'மத்திய அரசு' : 'Central',
+              label: isTa ? 'மத்திய அரசு' : 'Central Govt',
               icon: Icons.flag,
               isSelected: _selectedGovFilter == 'central',
               onTap: () => setState(() => _selectedGovFilter = 'central'),
               accentColor: SchemeColors.orange,
-            ),
-          ),
-          Expanded(
-            child: _govTabItem(
-              label: isTa ? 'தமிழ்நாடு அரசு' : 'State TN',
-              icon: Icons.account_balance,
-              isSelected: _selectedGovFilter == 'state',
-              onTap: () => setState(() => _selectedGovFilter = 'state'),
-              accentColor: SchemeColors.green,
             ),
           ),
         ],
@@ -1583,10 +1573,8 @@ class _SchemesScreenState extends State<SchemesScreen> {
         color: SchemeColors.skyBlue,
       ),
 
-      // -----------------------------------------------------------
-      // 2. TAMIL NADU STATE GOVERNMENT SCHEMES (12 SCHEMES)
-      // -----------------------------------------------------------
-      SchemeModel(
+      // Tamil Nadu State schemes removed — Central Govt schemes only
+      /*SchemeModel(
         id: 'kmut',
         govType: 'state',
         category: 'women',
@@ -1968,7 +1956,7 @@ class _SchemesScreenState extends State<SchemesScreen> {
         helpline: '14417 (School Education Helpline)',
         icon: Icons.menu_book_rounded,
         color: SchemeColors.purple,
-      ),
+      ),*/
     ];
   }
 }
